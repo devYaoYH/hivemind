@@ -20,6 +20,7 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
     sigemptyset(&mask_one);
     sigaddset(&mask_one, SIGCHLD);
     pid_t pid;
+    char magic = '!';
 
     sigprocmask(SIG_BLOCK, &mask_one, &prev_one);
     if ((pid = fork()) == 0){
@@ -32,12 +33,14 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
         close(fd_child_in[0]); close(fd_child_in[1]);
         close(fd_child_out[0]); close(fd_child_out[1]);
         
+        write(STDOUT_FILENO, &magic, 1);
+
         execve(arg[0], arg, NULL);
     }
     else{
         //Parent Process
         sigprocmask(SIG_BLOCK, &mask_all, NULL);        //Block all incoming signals (thread-safe)
-        
+
         //Ensure we do all necessary setup steps before handling any SIGCHLDs
         //Do not close pipes as other end needs to be open for children to access
         new_agent = new AgentInterface();
@@ -46,8 +49,15 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
         new_agent->setPid(pid);
         new_agent->setCmd(cmdline);
         agents.push_back(new_agent);    //Modifies common datastruc (that sigchld_handler relies on)
-        
+       
         sigprocmask(SIG_SETMASK, &prev_one, NULL);      //Re-enable signals (avoids race conditions)
+        
+        //Synchronize two processes
+        read(fd_child_out[0], &magic, 1);
+        
+        //PAUSE our process until Referee calls for it
+        kill(-pid, SIGSTOP);
+        waitpid(pid, NULL, WUNTRACED);
     }
     return true;
 }

@@ -1,66 +1,99 @@
+Running child: /usr/bin/python timed_py.py
 >>> received: hello world
-Time left: 923657us | I/O overhead: 26343us
+Time left: 925380us | I/O overhead: 24620us
+Running child: /usr/bin/java SimpleIO
 >>> received: hello world
-Time left: 949968us | I/O overhead: 32us
->>> received: hello world
-Time left: 949958us | I/O overhead: 42us
->>> received: hello world
-Time left: 949961us | I/O overhead: 39us
->>> received: hello world
-Time left: 949964us | I/O overhead: 36us
->>> received: hello world
-Time left: 949978us | I/O overhead: 22us
->>> received: hello world
-Time left: 949974us | I/O overhead: 26us
->>> received: hello world
-Time left: 949976us | I/O overhead: 24us
->>> received: hello world
-Time left: 949979us | I/O overhead: 21us
->>> received: hello world
-Time left: 949980us | I/O overhead: 20us
->>> received: hello world
-Time left: 825479us | I/O overhead: 124521us
->>> received: hello world
-Time left: 949579us | I/O overhead: 421us
->>> received: hello world
-Time left: 949605us | I/O overhead: 395us
->>> received: hello world
-Time left: 949605us | I/O overhead: 395us
->>> received: hello world
-Time left: 949594us | I/O overhead: 406us
->>> received: hello world
-Time left: 949620us | I/O overhead: 380us
->>> received: hello world
-Time left: 949615us | I/O overhead: 385us
->>> received: hello world
-Time left: 949625us | I/O overhead: 375us
->>> received: hello world
-Time left: 949613us | I/O overhead: 387us
->>> received: hello world
-Time left: 949545us | I/O overhead: 455us
+Time left: 818639us | I/O overhead: 131361us
+Running child: timed_child
 received: hello world
-Time left: 948146us | I/O overhead: 1854us
+Time left: 947890us | I/O overhead: 2110us
+Running child: /usr/bin/python timed_py.py
+>>> received: hello world
+Time left: 949890us | I/O overhead: 110us
+Running child: /usr/bin/java SimpleIO
+>>> received: hello world
+Time left: 949575us | I/O overhead: 425us
+Running child: timed_child
 received: hello world
-Time left: 949952us | I/O overhead: 48us
+Time left: 949947us | I/O overhead: 53us
+Running child: /usr/bin/python timed_py.py
+>>> received: hello world
+Time left: 949941us | I/O overhead: 59us
+Running child: /usr/bin/java SimpleIO
+>>> received: hello world
+Time left: 949634us | I/O overhead: 366us
+Running child: timed_child
 received: hello world
-Time left: 949960us | I/O overhead: 40us
+Time left: 949946us | I/O overhead: 54us
+Running child: /usr/bin/python timed_py.py
+>>> received: hello world
+Time left: 949944us | I/O overhead: 56us
+Running child: /usr/bin/java SimpleIO
+>>> received: hello world
+Time left: 949633us | I/O overhead: 367us
+Running child: timed_child
 received: hello world
-Time left: 949962us | I/O overhead: 38us
+Time left: 949940us | I/O overhead: 60us
+Running child: /usr/bin/python timed_py.py
+>>> received: hello world
+Time left: 949939us | I/O overhead: 61us
+Running child: /usr/bin/java SimpleIO
+>>> received: hello world
+Time left: 949572us | I/O overhead: 428us
+Running child: timed_child
 received: hello world
-Time left: 949960us | I/O overhead: 40us
+Time left: 949957us | I/O overhead: 43us
+Running child: /usr/bin/python timed_py.py
+>>> received: hello world
+Time left: 949940us | I/O overhead: 60us
+Running child: /usr/bin/java SimpleIO
+>>> received: hello world
+Time left: 949626us | I/O overhead: 374us
+Running child: timed_child
 received: hello world
-Time left: 949962us | I/O overhead: 38us
+Time left: 949940us | I/O overhead: 60us
+Running child: /usr/bin/python timed_py.py
+>>> received: hello world
+Time left: 949939us | I/O overhead: 61us
+Running child: /usr/bin/java SimpleIO
+>>> received: hello world
+Time left: 949610us | I/O overhead: 390us
+Running child: timed_child
 received: hello world
-Time left: 949961us | I/O overhead: 39us
+Time left: 949946us | I/O overhead: 54us
+Running child: /usr/bin/python timed_py.py
+>>> received: hello world
+Time left: 949936us | I/O overhead: 64us
+Running child: /usr/bin/java SimpleIO
+>>> received: hello world
+Time left: 949626us | I/O overhead: 374us
+Running child: timed_child
 received: hello world
-Time left: 949960us | I/O overhead: 40us
+Time left: 949941us | I/O overhead: 59us
+Running child: /usr/bin/python timed_py.py
+>>> received: hello world
+Time left: 949942us | I/O overhead: 58us
+Running child: /usr/bin/java SimpleIO
+>>> received: hello world
+Time left: 949600us | I/O overhead: 400us
+Running child: timed_child
 received: hello world
-Time left: 949960us | I/O overhead: 40us
+Time left: 949941us | I/O overhead: 59us
+Running child: /usr/bin/python timed_py.py
+>>> received: hello world
+Time left: 949940us | I/O overhead: 60us
+Running child: /usr/bin/java SimpleIO
+>>> received: hello world
+Time left: 949566us | I/O overhead: 434us
+Running child: timed_child
 received: hello world
-Time left: 949960us | I/O overhead: 40us
+Time left: 949947us | I/O overhead: 53us
+Terminating child: /usr/bin/python timed_py.py
 >>> received: quit
-Time left: 999968us | I/O overhead: -49968us
+Time left: 949944us | I/O overhead: 56us
+Terminating child: /usr/bin/java SimpleIO
 >>> received: quit
-Time left: 995640us | I/O overhead: -45640us
+Time left: 995918us | I/O overhead: -45918us
+Terminating child: timed_child
 received: quit
-Time left: 999941us | I/O overhead: -49941us
+Time left: 992883us | I/O overhead: -42883us

@@ -1,12 +1,10 @@
 #include "GameInterface.h"
 using namespace std;
 
-GameInterface::GameInterface(): agents() {
-    
+GameInterface::GameInterface(vector<AgentInterface*> agents): agents(agents){
+
 }
 
 GameInterface::~GameInterface(){
-    for (AgentInterface* agent: agents){
-        delete agent;
-    }
+
 }
