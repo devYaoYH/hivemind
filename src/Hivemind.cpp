@@ -36,22 +36,43 @@ int main(int argc, char* argv[])
     builder.getAgent("/usr/bin/python timed_py.py\n", agents);
     builder.getAgent("/usr/bin/java SimpleIO\n", agents);
     builder.getAgent("timed_child\n", agents);
+    
+    //PAUSE ALL AGENTS
+    for (AgentInterface* test_agent: agents){
+        kill(-(test_agent->getPid()), SIGSTOP);
+        waitpid(test_agent->getPid(), NULL, WUNTRACED);
+    }
 
     //Dummy Interaction with child script
     for (AgentInterface* test_agent: agents){
+        kill(-(test_agent->getPid()), SIGCONT);
+        waitpid(test_agent->getPid(), NULL, WCONTINUED);
         string response;
+        const int* pipes = test_agent->getFd();
+        cout << "[PARENT] READING FROM: " << pipes[0] << "|WRITING TO: " << pipes[1] << endl;
         
         for(int i=0;i<10;++i){
             *test_agent << msg;
             *test_agent >> response;
             cout << response << endl;
         }
-        
+        kill(-(test_agent->getPid()), SIGSTOP);
+        waitpid(test_agent->getPid(), NULL, WUNTRACED);
+    }
+
+    for (AgentInterface* test_agent: agents){
+        if (test_agent->running()){
+            cout << test_agent->getCmd();
+        }
+    }
+
+    for (AgentInterface* test_agent: agents){
+        kill(-(test_agent->getPid()), SIGCONT);
+        waitpid(test_agent->getPid(), NULL, WCONTINUED);
+        string response;
         *test_agent << end;
         *test_agent >> response;
         cout << response << endl;
-
-        kill(-(test_agent->getPid()), SIGINT);
     }
 
     //Loop through agents and wait till execution terminates
@@ -94,7 +115,7 @@ void sigchld_handler(int sig){
     int child_status;
 
     sigfillset(&mask_all);
-    while((pid = waitpid(-1, &child_status, WNOHANG | WUNTRACED)) > 0){
+    while((pid = waitpid(-1, &child_status, WNOHANG)) > 0){
         //Block all signals while we handle this child
         sigprocmask(SIG_BLOCK, &mask_all, &prev_all);
         //Do stuff to process child signal

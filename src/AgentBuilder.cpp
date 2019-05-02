@@ -25,11 +25,13 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
     if ((pid = fork()) == 0){
         //Child Process
         sigprocmask(SIG_SETMASK, &prev_one, NULL);      //Re-enable all child signals
+        setpgid(0, 0);
 
         dup2(fd_child_in[0], STDIN);
-        close(fd_child_in[0]); close(fd_child_in[1]);
         dup2(fd_child_out[1], STDOUT);
+        close(fd_child_in[0]); close(fd_child_in[1]);
         close(fd_child_out[0]); close(fd_child_out[1]);
+        
         execve(arg[0], arg, NULL);
     }
     else{
@@ -37,7 +39,7 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
         sigprocmask(SIG_BLOCK, &mask_all, NULL);        //Block all incoming signals (thread-safe)
         
         //Ensure we do all necessary setup steps before handling any SIGCHLDs
-        close(fd_child_in[0]); close(fd_child_out[1]);
+        //Do not close pipes as other end needs to be open for children to access
         new_agent = new AgentInterface();
         new_agent->attach_pipes(fd_child_out[0], fd_child_in[1]);
         new_agent->sig_callback(0, true);

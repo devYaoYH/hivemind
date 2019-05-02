@@ -51,6 +51,10 @@ void AgentInterface::attach_pipes(int fd_in, int fd_out){
     pipes[STDOUT] = fd_out;
 }
 
+const int* AgentInterface::getFd(){
+    return pipes;
+}
+
 //Writes to Agent with string obj specified
 AgentInterface& operator<<(AgentInterface& agent, string& to_write){
     cout << "Writing to Agent: " << to_write << endl;
@@ -73,17 +77,32 @@ void AgentInterface::move(string& output){
     timeout.tv_usec = TMP_MS;
     FD_ZERO(&input_pipe);
     FD_SET(pipes[STDIN], &input_pipe);
-    if (select(pipes[STDIN]+1, &input_pipe, NULL, NULL, &timeout)){
-        char buf[2];
-        output.clear();
-        while(read(pipes[STDIN], buf, 1) > 0 && buf[0] != '\n'){
-            output += buf[0];
+    output.clear();
+    if (is_auto){
+        if (select(pipes[STDIN]+1, &input_pipe, NULL, NULL, &timeout)){
+            char buf[2];
+            while(read(pipes[STDIN], buf, 1) > 0 && buf[0] != '\n'){
+                output += buf[0];
+            }
+            cerr << "Time left: " << timeout.tv_usec;
+            cerr << "us | I/O overhead: " << TMP_MS - 50000 - timeout.tv_usec << "us" << endl;
         }
-        cerr << "Time left: " << timeout.tv_usec;
-        cerr << "us | I/O overhead: " << TMP_MS - 50000 - timeout.tv_usec << "us" << endl;
+        else{
+            cerr << "ERROR! Read child process timeout: " << endl;
+        }
     }
     else{
-        cerr << "ERROR! Read child process timeout: " << endl;
+        //If this is a Human Agent, we block till we receive an input
+        while(output.length() < 1){
+            if (select(pipes[STDIN]+1, &input_pipe, NULL, NULL, &timeout)){
+                char buf[2];
+                while(read(pipes[STDIN], buf, 1) > 0 && buf[0] != '\n'){
+                    output += buf[0];
+                }
+                cerr << "Time left: " << timeout.tv_usec;
+                cerr << "us | I/O overhead: " << TMP_MS - 50000 - timeout.tv_usec << "us" << endl;
+            }
+        }
     }
 }
 

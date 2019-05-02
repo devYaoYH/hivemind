@@ -25,6 +25,7 @@ class AgentInterface {
 
         //IO Handles
         void attach_pipes(int fd_in, int fd_out);       //Sets the Agent's read/write IO interface.
+        const int* getFd();                             //Retrieves FD handles
 
 		//Parse Meta Data
 		void load_meta(const string keySeq, const string fname);

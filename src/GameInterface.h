@@ -12,7 +12,7 @@ class GameInterface {
 		virtual void agentMove(int agentIdx, string move) = 0;
 
 		// Query for Game State output to pass to Agent
-		virtual void outputState(int agentIdx, ostream& agent_stdin) = 0;
+		virtual void outputState(int agentIdx) = 0;
 	protected:
-		vector<AgentInterface> agents;
+		vector<AgentInterface*> agents;
 };

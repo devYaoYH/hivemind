@@ -1,0 +1,66 @@
+>>> received: hello world
+Time left: 923657us | I/O overhead: 26343us
+>>> received: hello world
+Time left: 949968us | I/O overhead: 32us
+>>> received: hello world
+Time left: 949958us | I/O overhead: 42us
+>>> received: hello world
+Time left: 949961us | I/O overhead: 39us
+>>> received: hello world
+Time left: 949964us | I/O overhead: 36us
+>>> received: hello world
+Time left: 949978us | I/O overhead: 22us
+>>> received: hello world
+Time left: 949974us | I/O overhead: 26us
+>>> received: hello world
+Time left: 949976us | I/O overhead: 24us
+>>> received: hello world
+Time left: 949979us | I/O overhead: 21us
+>>> received: hello world
+Time left: 949980us | I/O overhead: 20us
+>>> received: hello world
+Time left: 825479us | I/O overhead: 124521us
+>>> received: hello world
+Time left: 949579us | I/O overhead: 421us
+>>> received: hello world
+Time left: 949605us | I/O overhead: 395us
+>>> received: hello world
+Time left: 949605us | I/O overhead: 395us
+>>> received: hello world
+Time left: 949594us | I/O overhead: 406us
+>>> received: hello world
+Time left: 949620us | I/O overhead: 380us
+>>> received: hello world
+Time left: 949615us | I/O overhead: 385us
+>>> received: hello world
+Time left: 949625us | I/O overhead: 375us
+>>> received: hello world
+Time left: 949613us | I/O overhead: 387us
+>>> received: hello world
+Time left: 949545us | I/O overhead: 455us
+received: hello world
+Time left: 948146us | I/O overhead: 1854us
+received: hello world
+Time left: 949952us | I/O overhead: 48us
+received: hello world
+Time left: 949960us | I/O overhead: 40us
+received: hello world
+Time left: 949962us | I/O overhead: 38us
+received: hello world
+Time left: 949960us | I/O overhead: 40us
+received: hello world
+Time left: 949962us | I/O overhead: 38us
+received: hello world
+Time left: 949961us | I/O overhead: 39us
+received: hello world
+Time left: 949960us | I/O overhead: 40us
+received: hello world
+Time left: 949960us | I/O overhead: 40us
+received: hello world
+Time left: 949960us | I/O overhead: 40us
+>>> received: quit
+Time left: 999968us | I/O overhead: -49968us
+>>> received: quit
+Time left: 995640us | I/O overhead: -45640us
+received: quit
+Time left: 999941us | I/O overhead: -49941us
