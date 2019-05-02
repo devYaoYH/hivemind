@@ -1,0 +1,22 @@
+>>> received: hello world
+Time left: 919302us | I/O overhead: 30698us
+>>> received: hello world
+Time left: 949900us | I/O overhead: 100us
+>>> received: hello world
+Time left: 949953us | I/O overhead: 47us
+>>> received: hello world
+Time left: 949963us | I/O overhead: 37us
+>>> received: hello world
+Time left: 949965us | I/O overhead: 35us
+>>> received: hello world
+Time left: 949974us | I/O overhead: 26us
+>>> received: hello world
+Time left: 949975us | I/O overhead: 25us
+>>> received: hello world
+Time left: 949965us | I/O overhead: 35us
+>>> received: hello world
+Time left: 949980us | I/O overhead: 20us
+>>> received: hello world
+Time left: 949968us | I/O overhead: 32us
+>>> received: quit
+Time left: 949979us | I/O overhead: 21us

@@ -1,0 +1,19 @@
+{
+    "agents":
+    {
+        "1":
+        {
+            "name": "naiveBot",
+            "cmd": "cpp_bot"
+        },
+        "2":
+        {
+            "name": "mctsBot",
+            "cmd": "python mcts.py"
+        }
+    },
+    "config":
+    {
+        "time": 10
+    }
+}
