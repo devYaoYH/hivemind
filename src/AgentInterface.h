@@ -12,6 +12,16 @@ class AgentInterface {
 		virtual ~AgentInterface();						//virtual destructor
 		map<string, string>* getPlayerInfo();       	//Getter for player info
 		bool isAuto();			        				//Getter for is_auto?
+        
+        //Process control methods
+        bool running();                                 //Is child process still running?
+        int getChldStat();                              //Get child process running status
+        void sig_callback(int status, bool state);      //Reports child process from main
+        void setPid(pid_t pid);                         //Sets child process pid
+        pid_t getPid();                                 //Returns child pid
+
+        void setCmd(string cmdline);                    //Copies child init process cmdline
+        string getCmd();                                //Returns child proccess cmdline
 
         //IO Handles
         void attach_pipes(int fd_in, int fd_out);       //Sets the Agent's read/write IO interface.
@@ -25,7 +35,11 @@ class AgentInterface {
 	protected:
 		map<string, string>* meta_data;					//Stores player meta data information in a struct
 		bool is_auto;									//Marks whether is Robot
+        bool is_running;                                //Whether child process is running
         int pipes[2];                                   //Stores the STDIN/STDOUT fd pair for piping input to/from child process
+        int child_status;                               //Reports any child sig status
+        pid_t child_pid;                                //Stores child pid num
+        string cmdline;
 };
 
 //Writes to Agent attached to this interface

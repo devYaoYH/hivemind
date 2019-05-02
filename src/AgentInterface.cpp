@@ -2,17 +2,46 @@
 #define TMP_MS 1000000
 using namespace std;
 
-AgentInterface::AgentInterface(): meta_data(nullptr), is_auto(true) {
+AgentInterface::AgentInterface(): meta_data(nullptr), is_auto(true), is_running(false){
     pipes[0] = 0;
     pipes[1] = 0;
 }
 
-map<string, string>* AgentInterface::getPlayerInfo() {
+map<string, string>* AgentInterface::getPlayerInfo(){
 	return meta_data;
 }
 
-bool AgentInterface::isAuto() {
+bool AgentInterface::isAuto(){
 	return is_auto;
+}
+
+void AgentInterface::sig_callback(int status, bool state){
+    is_running = state;
+    child_status = status;
+}
+
+bool AgentInterface::running(){
+    return is_running;
+}
+
+int AgentInterface::getChldStat(){
+    return child_status;
+}
+
+void AgentInterface::setPid(pid_t pid){
+    child_pid = pid;
+}
+
+pid_t AgentInterface::getPid(){
+    return child_pid;
+}
+
+void AgentInterface::setCmd(string cmdline){
+    this->cmdline = cmdline;
+}
+
+string AgentInterface::getCmd(){
+    return cmdline;
 }
 
 // Specifies the which fd we should READ from
@@ -50,7 +79,8 @@ void AgentInterface::move(string& output){
         while(read(pipes[STDIN], buf, 1) > 0 && buf[0] != '\n'){
             output += buf[0];
         }
-        cerr << "Time left: " << timeout.tv_usec << "us | I/O overhead: " << TMP_MS - 50000 - timeout.tv_usec << "us" << endl;
+        cerr << "Time left: " << timeout.tv_usec;
+        cerr << "us | I/O overhead: " << TMP_MS - 50000 - timeout.tv_usec << "us" << endl;
     }
     else{
         cerr << "ERROR! Read child process timeout: " << endl;
@@ -63,7 +93,10 @@ void AgentInterface::update(string& input){
 }
 
 void AgentInterface::load_meta(const string keySeq, const string fname) {
-	Parser* config_parser = new Parser();
+	if (meta_data == nullptr){
+        meta_data = new map<string, string>();
+    }
+    Parser* config_parser = new Parser();
 	vector<string> tmp_objs;
 	config_parser->getAttrs(*meta_data, tmp_objs, keySeq, fname);
 }
