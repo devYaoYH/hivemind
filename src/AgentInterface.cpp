@@ -57,14 +57,12 @@ const int* AgentInterface::getFd(){
 
 //Writes to Agent with string obj specified
 AgentInterface& operator<<(AgentInterface& agent, string& to_write){
-    cout << "Writing to Agent: " << to_write << endl;
     agent.update(to_write);
     return agent;
 }
 
 //Reads from Agent to reference of string obj
 AgentInterface& operator>>(AgentInterface& agent, string& to_read){
-    cout << "Reading from Agent: " << to_read << endl;
     agent.move(to_read);
     return agent;
 }
@@ -78,14 +76,14 @@ void AgentInterface::move(string& output){
     FD_ZERO(&input_pipe);
     FD_SET(pipes[STDIN], &input_pipe);
     output.clear();
+    cerr << "READING from: " << cmdline;
     if (is_auto){
         if (select(pipes[STDIN]+1, &input_pipe, NULL, NULL, &timeout)){
             char buf[2];
             while(read(pipes[STDIN], buf, 1) > 0 && buf[0] != '\n'){
                 output += buf[0];
             }
-            cerr << "Time left: " << timeout.tv_usec;
-            cerr << "us | I/O overhead: " << TMP_MS - 50000 - timeout.tv_usec << "us" << endl;
+            cerr << "Process used: " << TMP_MS - timeout.tv_usec << "us" << endl;
         }
         else{
             cerr << "ERROR! Read child process timeout: " << endl;
@@ -99,8 +97,6 @@ void AgentInterface::move(string& output){
                 while(read(pipes[STDIN], buf, 1) > 0 && buf[0] != '\n'){
                     output += buf[0];
                 }
-                cerr << "Time left: " << timeout.tv_usec;
-                cerr << "us | I/O overhead: " << TMP_MS - 50000 - timeout.tv_usec << "us" << endl;
             }
         }
     }

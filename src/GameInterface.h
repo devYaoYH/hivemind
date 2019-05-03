@@ -5,11 +5,12 @@ using namespace std;
 
 class GameInterface {
 	public:
-		GameInterface(vector<AgentInterface*> agents);
+		GameInterface();
+        GameInterface(vector<AgentInterface*>* agents);
         virtual ~GameInterface();
-        
-        //Virtual Methods to be implemented
-        virtual void run() = 0;                             //Main Blocking loop
+
+        int invoke_agent(int agentIdx, string& input, string& output);
 	protected:
-		vector<AgentInterface*> agents;
+		vector<AgentInterface*>* agents;
+        int num_agents;
 };

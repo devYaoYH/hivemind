@@ -1,16 +1,15 @@
 #pragma once
-#include "GameInterface.h"
+#include "Referee.h"
 using namespace std;
 
-class SimpleReferee: public GameInterface{
+class SimpleReferee: public Referee{
     public:
-        SimpleReferee(vector<AgentInterface*> agents);
+        SimpleReferee(GameInterface* game);
         virtual ~SimpleReferee();
 
         virtual void run();
     private:
         void turn();
-        void quit();
         string test_msg = "hey there\n";
         string end = "quit\n";
         string msg = "hello world\n";

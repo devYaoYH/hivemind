@@ -1,6 +1,8 @@
 #include "AgentBuilder.h"
 using namespace std;
 
+int AgentBuilder::num_agents = 0;
+
 AgentBuilder::AgentBuilder(){
 
 }
@@ -10,6 +12,9 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
     int fd_child_in[2], fd_child_out[2];
     pipe(fd_child_in);
     pipe(fd_child_out);
+    string fname = to_string(num_agents) + "_agent.log";
+    int ferr = open(fname.c_str(), O_RDWR | O_CREAT);
+    
     AgentInterface* new_agent = nullptr;
 
     //Parse cmdline
@@ -30,8 +35,10 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
 
         dup2(fd_child_in[0], STDIN);
         dup2(fd_child_out[1], STDOUT);
+        dup2(ferr, fileno(stderr));
         close(fd_child_in[0]); close(fd_child_in[1]);
         close(fd_child_out[0]); close(fd_child_out[1]);
+        close(ferr);
         
         write(STDOUT_FILENO, &magic, 1);
 
@@ -59,6 +66,7 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
         kill(-pid, SIGSTOP);
         waitpid(pid, NULL, WUNTRACED);
     }
+    num_agents++;
     return true;
 }
 

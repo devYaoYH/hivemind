@@ -3,6 +3,7 @@
 #include "AgentBuilder.h"
 #include "AgentInterface.h"
 #include "GameInterface.h"
+#include "Referee.h"
 #include "SimpleReferee.h"
 
 char* arg[MAX_ARGS];
@@ -28,20 +29,25 @@ int main(int argc, char* argv[])
     builder.getAgent("/usr/bin/java SimpleIO\n", agents);
     builder.getAgent("timed_child\n", agents);
     
-    //Start GameManager Referee Object
-    GameInterface* referee = new SimpleReferee(agents);
+    //Start GameInterface Object that handles process I/O
+    GameInterface* game_handle = new GameInterface(&agents);
+
+    //Create our Referee Object
+    Referee* referee = new SimpleReferee(game_handle);
     
     //TODO: Waits till GameManager terminates
     referee->run();
     
     //Loop through agents and wait till execution terminates
-    bool complete = true;
     for (AgentInterface* agent: agents){
         if (agent->running()){
-            complete = false;
+            kill(-(agent->getPid()), SIGKILL);
+            while(agent->running()){
+                continue;
+            }
         }
     }
-    cout << "Children closed successfully: " << complete << endl;
+    cout << "Children closed successfully" << endl;
 
     //Only delete AgentInterface objects here
     for (AgentInterface* agent: agents) delete agent;

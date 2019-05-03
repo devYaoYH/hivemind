@@ -13,5 +13,6 @@ class AgentBuilder{
         bool getAgent(string cmdline, vector<AgentInterface*>& agents);
     private:
         char* arg[MAX_ARGS];
+        static int num_agents;
         void parseline(const char* cmdline, char** argv);       //Cmdline parser from 361 shell-lab
 };
