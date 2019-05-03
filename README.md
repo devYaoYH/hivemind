@@ -38,7 +38,7 @@ Currently, Referee code is in-built into `./gameManager` executable during the c
 
 Abstract Referee class to implement:
 
-```
+```cpp
 class Referee{
     public:
         Referee() {}
@@ -51,7 +51,7 @@ class Referee{
 ```
 
 Custom Referee Format:
-```
+```cpp
 class MyReferee: public Referee{
     public:
         MyReferee(shared_ptr<GameInterface> game){
@@ -71,12 +71,12 @@ class MyReferee: public Referee{
 > No other changes are necessary if we leave custom Referee class name as `MyReferee.h` `MyReferee.cpp`
 
 Modifying `main` to run our new Referee (if necessary):
-```
-[7]     #include "MyReferee.h"                          //--> Change file name accordingly
+```cpp
+[7]   #include "MyReferee.h"                          //--> Change file name accordingly
 
 ...
 
-[41]    Referee* referee = new MyReferee(game_handle);  //--> Change object name accordingly
+[41]  Referee* referee = new MyReferee(game_handle);  //--> Change object name accordingly
 ```
 
 Compile with `make` in src folder and run executable `./gameManager`.
