@@ -3,6 +3,16 @@ import math
 import time
 import random
 
+##############
+# PARSE ARGS #
+##############
+# Default timout for our mcts algo
+TIMEOUT = 0.048
+if (len(sys.argv) > 1):
+    new_ms = int(sys.argv[1])
+    if (new_ms > 0 and new_ms < 1000):
+        TIMEOUT = new_ms/1000
+
 ##################
 # TIMER FUNCTION #
 ##################
@@ -588,8 +598,8 @@ while True:
     valid_actions = sorted(valid_actions)
     print("Actual: ", valid_actions, file=sys.stderr)
 
-    # Give it 40ms of time
-    next_move = engine.next_play(0.048, game.cur_state)
+    # Give it [TIMEOUT]ms of time
+    next_move = engine.next_play(TIMEOUT, game.cur_state)
     n_move = next_move[1]
     ngx, ngy, ncx, ncy = n_move
     n_move_idx = grid_to_idx[ngx][ngy][ncx][ncy]

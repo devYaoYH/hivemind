@@ -4,7 +4,7 @@
 #include "AgentInterface.h"
 #include "GameInterface.h"
 #include "Referee.h"
-#include "UTTTReferee.h"
+#include "MyReferee.h"
 
 char* arg[MAX_ARGS];
 
@@ -25,10 +25,8 @@ int main(int argc, char* argv[])
     //Initiate a Builder class for us to generate Agent objects from config file
     AgentBuilder builder = AgentBuilder();
 
-    builder.getAgent("/usr/bin/python3 simple_uttt.py\n", agents);
-    builder.getAgent("/usr/bin/python3 mcts_ucb.py\n", agents);
-    //builder.getAgent("/usr/bin/java SimpleIO\n", agents);
-    //builder.getAgent("timed_child\n", agents);
+    builder.getAgent("/usr/bin/python3 mcts_ucb.py 48\n", agents);
+    builder.getAgent("/usr/bin/python3 mcts_ucb.py 1\n", agents);
     
     //Redirect stderr to log file
     string log_file = "game.log";
@@ -40,7 +38,7 @@ int main(int argc, char* argv[])
     shared_ptr<GameInterface> game_handle = make_shared<GameInterface>(&agents);
 
     //Create our Referee Object
-    Referee* referee = new UTTTReferee(game_handle);
+    Referee* referee = new MyReferee(game_handle);
     
     //Blocking call Referee terminates
     referee->run();

@@ -1,7 +1,7 @@
-#include "UTTTReferee.h"
+#include "MyReferee.h"
 using namespace std;
 
-UTTTReferee::UTTTReferee(shared_ptr<GameInterface> game): Referee(), turn_count(0){
+MyReferee::MyReferee(shared_ptr<GameInterface> game): Referee(), turn_count(0){
     hive = game;
     player_wins[0] = 0;
     player_wins[1] = 0;
@@ -10,7 +10,7 @@ UTTTReferee::UTTTReferee(shared_ptr<GameInterface> game): Referee(), turn_count(
 }
 
 /* Referee Helpers */
-bool UTTTReferee::run_agent(int idx){
+bool MyReferee::run_agent(int idx){
     //Query the board with last move to get list of valid locations
     vector<pair<int, int> > next_locations;
     board->getValidLocations(next_locations);
@@ -54,7 +54,7 @@ bool UTTTReferee::run_agent(int idx){
     return false;
 }
 
-bool UTTTReferee::turn(){
+bool MyReferee::turn(){
     turn_count++;
     //Run agents sequentially
     for (int i=0;i<2;++i){
@@ -105,7 +105,7 @@ bool UTTTReferee::turn(){
     return true;
 }
 
-void UTTTReferee::run(){
+void MyReferee::run(){
     //Write initial move to agent
     do{
         cerr << "=====" << endl << turn_count << endl;
@@ -114,6 +114,6 @@ void UTTTReferee::run(){
     board->display();
 }
 
-UTTTReferee::~UTTTReferee(){
+MyReferee::~MyReferee(){
     delete board;
 }

@@ -1,8 +1,9 @@
 #include "AgentInterface.h"
-#define TMP_MS 1000000
+#define INIT_US 1001000
+#define ROUND_US 51000
 using namespace std;
 
-AgentInterface::AgentInterface(): meta_data(nullptr), is_auto(true), is_running(false){
+AgentInterface::AgentInterface(): meta_data(nullptr), is_auto(true), is_running(false), is_stopped(false), has_init(false){
     pipes[0] = 0;
     pipes[1] = 0;
 }
@@ -76,7 +77,7 @@ void AgentInterface::move(string& output){
     fd_set input_pipe;
     struct timeval timeout;
     timeout.tv_sec = 0;
-    timeout.tv_usec = TMP_MS;
+    timeout.tv_usec = has_init?ROUND_US:INIT_US;
     FD_ZERO(&input_pipe);
     FD_SET(pipes[STDIN], &input_pipe);
     output.clear();
@@ -88,7 +89,8 @@ void AgentInterface::move(string& output){
             while(read(pipes[STDIN], buf, 1) > 0 && buf[0] != '\n'){
                 output += buf[0];
             }
-            cout << "Process used: " << TMP_MS - timeout.tv_usec << "us" << endl;
+            cout << "Process used: " << (has_init?ROUND_US:INIT_US) - timeout.tv_usec << "us" << endl;
+            has_init = true;
         }
         else{
             //cerr << "ERROR! Read child process timeout: " << endl;

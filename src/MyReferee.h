@@ -3,10 +3,10 @@
 #include "LargeGrid.h"
 using namespace std;
 
-class UTTTReferee: public Referee{
+class MyReferee: public Referee{
     public:
-        UTTTReferee(shared_ptr<GameInterface> game);
-        virtual ~UTTTReferee();
+        MyReferee(shared_ptr<GameInterface> game);
+        virtual ~MyReferee();
 
         virtual void run();
     private:

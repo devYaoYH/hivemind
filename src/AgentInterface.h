@@ -44,6 +44,8 @@ class AgentInterface {
 		map<string, string>* meta_data;					//Stores player meta data information in a struct
 		bool is_auto;									//Marks whether is Robot
         bool is_running;                                //Whether child process is running
+        bool is_stopped;                                //Whether child process is stopped (SIGSTOP sent)
+        bool has_init;                                  //First round read/write IO sets time aside for process init
         int pipes[2];                                   //Stores the STDIN/STDOUT fd pair for piping input to/from child process
         int child_status;                               //Reports any child sig status
         pid_t child_pid;                                //Stores child pid num
