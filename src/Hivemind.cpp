@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     //Initiate a Builder class for us to generate Agent objects from config file
     AgentBuilder builder = AgentBuilder();
 
-    builder.getAgent("/usr/bin/python3 mcts_ucb.py\n", agents);
+    builder.getAgent("/usr/bin/python3 simple_uttt.py\n", agents);
     builder.getAgent("/usr/bin/python3 mcts_ucb.py\n", agents);
     //builder.getAgent("/usr/bin/java SimpleIO\n", agents);
     //builder.getAgent("timed_child\n", agents);

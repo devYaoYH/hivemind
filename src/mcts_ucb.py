@@ -589,7 +589,7 @@ while True:
     print("Actual: ", valid_actions, file=sys.stderr)
 
     # Give it 40ms of time
-    next_move = engine.next_play(0.48, game.cur_state)
+    next_move = engine.next_play(0.048, game.cur_state)
     n_move = next_move[1]
     ngx, ngy, ncx, ncy = n_move
     n_move_idx = grid_to_idx[ngx][ngy][ncx][ncy]

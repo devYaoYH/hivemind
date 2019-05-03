@@ -3,6 +3,13 @@
 #include "Parser.h"
 using namespace std;
 
+#ifndef AGENT_INTERFACE
+#define AGENT_INTERFACE
+//Pre-defined ERROR strings
+const string TIMEOUT = "TIMEOUT";
+const string ERROR = "ERROR";
+#endif
+
 //Abstract Class to extend into Human || Robot
 class AgentInterface {
     friend AgentInterface& operator<<(AgentInterface& agent, string& to_write);

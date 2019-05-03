@@ -1,5 +1,6 @@
 #pragma once
 #include "Referee.h"
+#include "LargeGrid.h"
 using namespace std;
 
 class UTTTReferee: public Referee{
@@ -9,6 +10,10 @@ class UTTTReferee: public Referee{
 
         virtual void run();
     private:
-        void turn();
-        string last_move;
+        int turn_count;
+        int player_wins[2];
+        pair<int, int> last_move;
+        LargeGrid* board;
+        bool turn();
+        bool run_agent(int idx);
 };

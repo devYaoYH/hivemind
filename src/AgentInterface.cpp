@@ -63,6 +63,10 @@ AgentInterface& operator<<(AgentInterface& agent, string& to_write){
 
 //Reads from Agent to reference of string obj
 AgentInterface& operator>>(AgentInterface& agent, string& to_read){
+    if (!agent.running()){
+        to_read = string(ERROR.begin(), ERROR.end());
+        return agent;
+    }
     agent.move(to_read);
     return agent;
 }
@@ -78,16 +82,17 @@ void AgentInterface::move(string& output){
     output.clear();
     //cerr << "READING from: " << cmdline;
     if (is_auto){
-        cerr << "READING from: " << cmdline;
+        cout << "READING from: " << cmdline;
         if (select(pipes[STDIN]+1, &input_pipe, NULL, NULL, &timeout)){
             char buf[2];
             while(read(pipes[STDIN], buf, 1) > 0 && buf[0] != '\n'){
                 output += buf[0];
             }
-            cerr << "Process used: " << TMP_MS - timeout.tv_usec << "us" << endl;
+            cout << "Process used: " << TMP_MS - timeout.tv_usec << "us" << endl;
         }
         else{
-            cerr << "ERROR! Read child process timeout: " << endl;
+            //cerr << "ERROR! Read child process timeout: " << endl;
+            output = string(TIMEOUT.begin(), TIMEOUT.end());
         }
     }
     else{

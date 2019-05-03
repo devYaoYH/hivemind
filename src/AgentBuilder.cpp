@@ -67,7 +67,6 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
         read(fd_child_out[0], &magic, 1);
         
         //PAUSE our process until Referee calls for it
-        cerr << "Pausing process" << endl;
         //int child_status;
         kill(-pid, SIGSTOP);
         //waitpid(pid, &child_status, WUNTRACED);
