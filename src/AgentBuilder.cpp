@@ -13,7 +13,8 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
     pipe(fd_child_in);
     pipe(fd_child_out);
     string fname = to_string(num_agents) + "_agent.log";
-    int ferr = open(fname.c_str(), O_RDWR | O_CREAT);
+    int ferr = open(fname.c_str(), O_FLAGS, S_FLAGS);
+    num_agents++;
     
     AgentInterface* new_agent = nullptr;
 
@@ -42,7 +43,10 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
         
         write(STDOUT_FILENO, &magic, 1);
 
-        execve(arg[0], arg, NULL);
+        if (execve(arg[0], arg, NULL) < 0){
+            //Error has occurred
+            exit(1);
+        }
     }
     else{
         //Parent Process
@@ -57,16 +61,28 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
         new_agent->setCmd(cmdline);
         agents.push_back(new_agent);    //Modifies common datastruc (that sigchld_handler relies on)
        
-        sigprocmask(SIG_SETMASK, &prev_one, NULL);      //Re-enable signals (avoids race conditions)
+        //sigprocmask(SIG_SETMASK, &prev_one, NULL);      //Re-enable signals (avoids race conditions)
         
         //Synchronize two processes
         read(fd_child_out[0], &magic, 1);
         
         //PAUSE our process until Referee calls for it
+        cerr << "Pausing process" << endl;
+        //int child_status;
         kill(-pid, SIGSTOP);
-        waitpid(pid, NULL, WUNTRACED);
+        //waitpid(pid, &child_status, WUNTRACED);
+        /*if (WIFEXITED(child_status)){
+            new_agent->sig_callback(WEXITSTATUS(child_status), false);
+            sigprocmask(SIG_SETMASK, &prev_one, NULL);      //Re-enable signals (avoids race conditions)
+            return false;
+        }
+        else if (WIFSIGNALED(child_status)){
+            new_agent->sig_callback(WTERMSIG(child_status), false);
+            sigprocmask(SIG_SETMASK, &prev_one, NULL);      //Re-enable signals (avoids race conditions)
+            return false;
+        }*/
+        sigprocmask(SIG_SETMASK, &prev_one, NULL);      //Re-enable signals (avoids race conditions)
     }
-    num_agents++;
     return true;
 }
 

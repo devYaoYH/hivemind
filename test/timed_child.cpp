@@ -13,6 +13,10 @@ int main(int argc, char* argv[]){
         char* tmp;
         millis_delay = strtol(argv[1], &tmp, BASE);
     }
+    if (millis_delay == 1337){
+        int* ptr = nullptr;
+        *ptr = 0;
+    }
     string query;
     while(query.compare("quit")){
         getline(cin, query);

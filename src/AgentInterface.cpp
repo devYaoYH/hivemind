@@ -76,8 +76,9 @@ void AgentInterface::move(string& output){
     FD_ZERO(&input_pipe);
     FD_SET(pipes[STDIN], &input_pipe);
     output.clear();
-    cerr << "READING from: " << cmdline;
+    //cerr << "READING from: " << cmdline;
     if (is_auto){
+        cerr << "READING from: " << cmdline;
         if (select(pipes[STDIN]+1, &input_pipe, NULL, NULL, &timeout)){
             char buf[2];
             while(read(pipes[STDIN], buf, 1) > 0 && buf[0] != '\n'){

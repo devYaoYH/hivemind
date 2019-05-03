@@ -4,7 +4,7 @@ using namespace std;
 
 class SimpleReferee: public Referee{
     public:
-        SimpleReferee(GameInterface* game);
+        SimpleReferee(shared_ptr<GameInterface> game);
         virtual ~SimpleReferee();
 
         virtual void run();

@@ -12,6 +12,7 @@ GameInterface::GameInterface(vector<AgentInterface*>* agents): agents(agents), n
 int GameInterface::invoke_agent(int agentIdx, string& input, string&output){
     if (agentIdx >= num_agents) return 1;
     AgentInterface* agent = (*agents)[agentIdx];
+    if (!agent->running()) return 2;
     kill(-(agent->getPid()), SIGCONT);
     waitpid(agent->getPid(), NULL, WCONTINUED);
     *agent << input;

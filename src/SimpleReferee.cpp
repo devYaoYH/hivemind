@@ -2,7 +2,7 @@
 using namespace std;
 
 //Initialize with agent vector
-SimpleReferee::SimpleReferee(GameInterface* game){
+SimpleReferee::SimpleReferee(shared_ptr<GameInterface> game): Referee(){
     hive = game;
 }
 

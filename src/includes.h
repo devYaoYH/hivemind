@@ -32,3 +32,8 @@
 #define STDIN 0
 #define STDOUT 1
 #define STDERR 2
+
+//open() file creation flags (read/write | create | overwrite)
+#define O_FLAGS O_RDWR | O_CREAT | O_TRUNC
+//open() file permission flags (chmod 644)
+#define S_FLAGS S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH

@@ -4,7 +4,7 @@
 #include "AgentInterface.h"
 #include "GameInterface.h"
 #include "Referee.h"
-#include "SimpleReferee.h"
+#include "UTTTReferee.h"
 
 char* arg[MAX_ARGS];
 
@@ -25,23 +25,32 @@ int main(int argc, char* argv[])
     //Initiate a Builder class for us to generate Agent objects from config file
     AgentBuilder builder = AgentBuilder();
 
-    builder.getAgent("/usr/bin/python timed_py.py\n", agents);
-    builder.getAgent("/usr/bin/java SimpleIO\n", agents);
-    builder.getAgent("timed_child\n", agents);
+    builder.getAgent("/usr/bin/python3 mcts_ucb.py\n", agents);
+    builder.getAgent("/usr/bin/python3 mcts_ucb.py\n", agents);
+    //builder.getAgent("/usr/bin/java SimpleIO\n", agents);
+    //builder.getAgent("timed_child\n", agents);
+    
+    //Redirect stderr to log file
+    string log_file = "game.log";
+    int file_err = open(log_file.c_str(), O_FLAGS, S_FLAGS);
+    dup2(file_err, fileno(stderr));
+    close(file_err);
     
     //Start GameInterface Object that handles process I/O
-    GameInterface* game_handle = new GameInterface(&agents);
+    shared_ptr<GameInterface> game_handle = make_shared<GameInterface>(&agents);
 
     //Create our Referee Object
-    Referee* referee = new SimpleReferee(game_handle);
+    Referee* referee = new UTTTReferee(game_handle);
     
-    //TODO: Waits till GameManager terminates
+    //Blocking call Referee terminates
     referee->run();
-    
+
+    /* CLEANUP */
     //Loop through agents and wait till execution terminates
     for (AgentInterface* agent: agents){
         if (agent->running()){
             kill(-(agent->getPid()), SIGKILL);
+            //Busy Loop till we get successful termination of child process via interrupt by SIGCHLD
             while(agent->running()){
                 continue;
             }
@@ -49,16 +58,17 @@ int main(int argc, char* argv[])
     }
     cout << "Children closed successfully" << endl;
 
-    //Only delete AgentInterface objects here
+    //Clean up heap resources
     for (AgentInterface* agent: agents) delete agent;
+    delete referee;
 
     return 0;
 }
 
 /* Process Methods */
 void remove_child(pid_t pid, int child_status, bool running){
-    char s[] = "child_terminated\n";
-    write(STDOUT_FILENO, s, 17);
+    char tmp[] = "child terminated\n";
+    write(STDOUT_FILENO, tmp, 17);
     for (AgentInterface* agent: agents){
         if (pid == agent->getPid()){
             agent->sig_callback(child_status, running);
