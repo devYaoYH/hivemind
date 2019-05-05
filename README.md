@@ -28,6 +28,8 @@ Just run `make` from within `src\` to compile project.
 
 Output `gameManager` binary executable that reads from `config.json` and spawns children processes to play against each other.
 
+Run `./gameManager -h` to view additional commandline configuration options.
+
 ## Configurations
 Place configurations under `config.json` for binary to parse.
 
@@ -55,6 +57,8 @@ We must have at least an "agents" key with agent process specifications. See exa
     }
 }
 ```
+
+### Agent Configurations
 Each "agent" requires a unique name that identifies it (key within "agents") and have at least the two "type" and "cmd" fields.
 
 - "type": Specifies what language it is written as, if it is a binary executable, an empty string suffices.
@@ -72,6 +76,19 @@ For instance:
         "cmd": "./timed_child"
     }
 ```
+
+### Game Manager Configurations
+We can choose to set specific time limits for our agents to play with.
+```
+    "config":
+    {
+        "init": "<first round time limit>",
+        "round": "<each round thereafter>",
+        "games": "<how many games to play with given agents>"
+    }
+```
+
+Note that each Key:Value pair must be formatted as **strings** with double-quotes `"`.
 
 ## Referee Specifications
 Currently, Referee code is in-built into `./gameManager` executable during the compilation step.

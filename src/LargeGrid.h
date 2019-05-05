@@ -17,6 +17,7 @@ class LargeGrid: public TGrid{
     private:
         //Previously made move -> determines next grid
         pair<int, int> prev_move;
+        pair<int, int> last_played;
         //Grid of Tic Tac Toe objects
         shared_ptr<SmallGrid> grid[3][3];
 };

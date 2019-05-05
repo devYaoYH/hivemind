@@ -68,7 +68,7 @@ void JsonParser::getAttrs(map<string, string>& kvmap, vector<string>& expanded_o
 bool JsonParser::load_file(string fname) {
 	ifstream fin(fname);
 	if (!fin.is_open()) {
-		cerr << "JsonParser ERROR-> File: " << fname << " cannot be Opened!" << endl;
+		cout << "JsonParser ERROR-> File: " << fname << " cannot be Opened!" << endl;
 		return false;
 	}
 	try {

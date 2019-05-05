@@ -1,7 +1,7 @@
 #include "LargeGrid.h"
 using namespace std;
 
-LargeGrid::LargeGrid(): prev_move(pair<int, int>(-1, -1)){
+LargeGrid::LargeGrid(): prev_move(pair<int, int>(-1, -1)), last_played(pair<int, int>(-1, -1)){
     for (int r=0;r<3;++r){
         for (int c=0;c<3;++c){
             grid[r][c] = make_shared<SmallGrid>();
@@ -26,9 +26,16 @@ void LargeGrid::display(){
         if (r%3 == 0) cerr << "-------------" << endl;
         for (int c=0;c<9;++c){
             if (c%3 == 0) cerr << '|';
-            if (tmp_grid[r][c] == 0) cerr << 'o';
-            else if (tmp_grid[r][c] == 1) cerr << 'x';
-            else cerr << ' ';
+            if (last_played.first == r && last_played.second == c){
+                if (tmp_grid[r][c] == 0) cerr << 'O';
+                else if (tmp_grid[r][c] == 1) cerr << 'X';
+                else cerr << ' ';
+            }
+            else{
+                if (tmp_grid[r][c] == 0) cerr << 'o';
+                else if (tmp_grid[r][c] == 1) cerr << 'x';
+                else cerr << ' ';
+            }
         }
         cerr << '|' << endl;
     }
@@ -52,7 +59,6 @@ int LargeGrid::winner(){
         cerr << '|' << endl;
     }
     cerr << "-----" << endl;
-    if (!has_moves) return play_DRAW;
     for (int i=0;i<8;++i){
         //Check each line
         int winner = grid[winning_lines[i][0][0]][winning_lines[i][0][1]]->winner();
@@ -70,6 +76,7 @@ int LargeGrid::winner(){
             return line_winner;
         }
     }
+    if (!has_moves) return play_DRAW;
     return play_EMPTY;
 }
 
@@ -82,6 +89,8 @@ int LargeGrid::play(pair<int, int> move, int player){
     if (play_result != play_ERROR){
         prev_move.first = cr;
         prev_move.second = cc;
+        last_played.first = move.first;
+        last_played.second = move.second;
     }
     return play_result;
 }

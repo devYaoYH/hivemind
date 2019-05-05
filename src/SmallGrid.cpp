@@ -14,16 +14,6 @@ int SmallGrid::getPos(int r, int c){
 }
 
 int SmallGrid::winner(){
-    bool has_moves = false;
-    for (int r=0;r<3;++r){
-        for (int c=0;c<3;++c){
-            if (grid[r][c] == -1){
-                has_moves = true;
-                break;
-            }
-        }
-    }
-    if (!has_moves) return play_DRAW;
     for (int i=0;i<8;++i){
         //Check each line
         int winner = grid[winning_lines[i][0][0]][winning_lines[i][0][1]];
@@ -41,6 +31,16 @@ int SmallGrid::winner(){
             return line_winner;
         }
     }
+    bool has_moves = false;
+    for (int r=0;r<3;++r){
+        for (int c=0;c<3;++c){
+            if (grid[r][c] == -1){
+                has_moves = true;
+                break;
+            }
+        }
+    }
+    if (!has_moves) return play_DRAW;
     return play_EMPTY;
 }
 

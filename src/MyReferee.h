@@ -11,12 +11,14 @@ class MyReferee: public Referee{
         MyReferee(shared_ptr<GameInterface> game);
         virtual ~MyReferee();
 
-        virtual void run();
+        virtual int* run();
     private:
         int turn_count;
         int player_wins[NUM_AGENTS];
+        int player_rank[NUM_AGENTS];
         pair<int, int> last_move;
         LargeGrid* board;
         bool turn();
         bool run_agent(int idx);
+        void print_result();
 };

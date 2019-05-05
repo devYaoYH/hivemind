@@ -3,7 +3,12 @@
 #define ROUND_US 51000
 using namespace std;
 
-AgentInterface::AgentInterface(): meta_data(nullptr), is_auto(true), is_running(false), is_stopped(false), has_init(false){
+AgentInterface::AgentInterface(): meta_data(nullptr), is_auto(true), is_running(false), is_stopped(false), has_init(false), child_status(0), t_init(INIT_US), t_round(ROUND_US){
+    pipes[0] = 0;
+    pipes[1] = 0;
+}
+
+AgentInterface::AgentInterface(int t_init, int t_round): meta_data(nullptr), is_auto(true), is_running(false), is_stopped(false), has_init(false), child_status(0), t_init(t_init*1000), t_round(t_round*1000){
     pipes[0] = 0;
     pipes[1] = 0;
 }
@@ -77,19 +82,19 @@ void AgentInterface::move(string& output){
     fd_set input_pipe;
     struct timeval timeout;
     timeout.tv_sec = 0;
-    timeout.tv_usec = has_init?ROUND_US:INIT_US;
+    timeout.tv_usec = has_init?t_round:t_init;
     FD_ZERO(&input_pipe);
     FD_SET(pipes[STDIN], &input_pipe);
     output.clear();
     //cerr << "READING from: " << cmdline;
     if (is_auto){
-        cout << "READING from: " << cmdline;
+        if (debug_mode) cout << "READING from: " << cmdline;
         if (select(pipes[STDIN]+1, &input_pipe, NULL, NULL, &timeout)){
             char buf[2];
             while(read(pipes[STDIN], buf, 1) > 0 && buf[0] != '\n'){
                 output += buf[0];
             }
-            cout << "Process used: " << (has_init?ROUND_US:INIT_US) - timeout.tv_usec << "us" << endl;
+            if (debug_mode) cout << "Process used: " << (has_init?t_round:t_init) - timeout.tv_usec << "us" << endl;
             has_init = true;
         }
         else{

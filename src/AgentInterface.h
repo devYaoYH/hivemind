@@ -3,12 +3,10 @@
 #include "Parser.h"
 using namespace std;
 
-#ifndef AGENT_INTERFACE
-#define AGENT_INTERFACE
-//Pre-defined ERROR strings
-const string TIMEOUT = "TIMEOUT";
-const string ERROR = "ERROR";
-#endif
+extern string TIMEOUT;
+extern string ERROR;
+extern bool debug_mode;
+extern bool verbose_mode;
 
 //Abstract Class to extend into Human || Robot
 class AgentInterface {
@@ -16,6 +14,7 @@ class AgentInterface {
     friend AgentInterface& operator>>(AgentInterface& agent, string& to_read);
 	public:
 		AgentInterface();								//Defaults to a Robot Agent
+        AgentInterface(int t_init, int t_round);        //Initialize with additional parameters
 		virtual ~AgentInterface();						//virtual destructor
 		map<string, string>* getPlayerInfo();       	//Getter for player info
 		bool isAuto();			        				//Getter for is_auto?
@@ -48,6 +47,7 @@ class AgentInterface {
         bool has_init;                                  //First round read/write IO sets time aside for process init
         int pipes[2];                                   //Stores the STDIN/STDOUT fd pair for piping input to/from child process
         int child_status;                               //Reports any child sig status
+        int t_init, t_round;                            //Time limits for child process
         pid_t child_pid;                                //Stores child pid num
         string cmdline;
 };

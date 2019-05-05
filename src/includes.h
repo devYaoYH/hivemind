@@ -37,3 +37,15 @@
 #define O_FLAGS O_RDWR | O_CREAT | O_TRUNC
 //open() file permission flags (chmod 644)
 #define S_FLAGS S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
+
+//Common Declarations
+enum ERR_CODES{
+    SUCCESS,
+    AGENT_OB,
+    AGENT_KILLED,
+    RUNTIME_ERROR,
+    AGENT_TIMEOUT
+};
+extern std::string ERR_STRINGS[];
+extern std::string TIMEOUT;
+extern std::string ERROR;

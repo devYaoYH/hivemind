@@ -4,7 +4,7 @@
         "FastBot":
         {
             "type": "python3",
-            "cmd": "simple_uttt.py 10"
+            "cmd": "mcts_ucb.py 40"
         },
         "GoodBot":
         {
@@ -14,8 +14,6 @@
     },
     "config":
     {
-        "init": "1000",
-        "round": "50",
-        "games": "5"
+        "games": "10"
     }
 }

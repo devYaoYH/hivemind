@@ -20,8 +20,8 @@ ConfigParser* Parser::getParser(){
 }
 
 Parser::~Parser(){
+    conut--;
     if (conut == 0){
         delete parser;
     }
-    conut--;
 }

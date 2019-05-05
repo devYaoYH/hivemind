@@ -3,17 +3,6 @@
 #include "AgentInterface.h"
 using namespace std;
 
-#ifndef GAME_INTERFACE
-#define GAME_INTERFACE
-enum ERR_CODES{
-    SUCCESS,
-    AGENT_OB,
-    AGENT_KILLED,
-    RUNTIME_ERROR,
-    AGENT_TIMEOUT
-};
-#endif
-
 class GameInterface {
 	public:
 		GameInterface();
@@ -24,4 +13,5 @@ class GameInterface {
 	protected:
 		vector<AgentInterface*>* agents;
         int num_agents;
+        ERR_CODES print_err(ERR_CODES e);
 };

@@ -8,7 +8,7 @@ class Referee{
         Referee() {}
         virtual ~Referee() {}
         //Interface Methods
-        virtual void run() = 0;
+        virtual int* run() = 0;
     protected:
         shared_ptr<GameInterface> hive;
 };

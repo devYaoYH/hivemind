@@ -3,7 +3,10 @@ using namespace std;
 
 MyReferee::MyReferee(shared_ptr<GameInterface> game): Referee(), turn_count(0){
     hive = game;
-    for (int i=0;i<NUM_AGENTS;++i) player_wins[i] = 0;
+    for (int i=0;i<NUM_AGENTS;++i){
+        player_wins[i] = 0;
+        player_rank[i] = 0;
+    }
     last_move = pair<int, int>(-1, -1);
     board = new LargeGrid();
 }
@@ -48,7 +51,7 @@ bool MyReferee::run_agent(int idx){
         }
     }
     else{
-        cerr << "Agent " << idx << " Responded with ERROR CODE: " << agent_status << endl;
+        cerr << "Agent " << idx << " Responded with ERROR CODE: " << ERR_STRINGS[agent_status] << endl;
     }
     return false;
 }
@@ -66,33 +69,32 @@ bool MyReferee::turn(){
         if (play_result == i){
             //We have a winner!!
             if (i == 0){
-                cerr << "#####" << endl;
-                cerr << 1 << " " << 2 << endl;
-                return false;
+                player_rank[0] = 1;
+                player_rank[1] = 2;
             }
             else{
-                cerr << "#####" << endl;
-                cerr << 2 << " " << 1 << endl;
-                return false;
+                player_rank[0] = 2;
+                player_rank[1] = 1;
             }
+            return false;
         }
         else if (play_result == play_DRAW){
             //Draw game
             //Check how many small grids each player won
             if (player_wins[0] > player_wins[1]){
                 //Player 0 wins!
-                cerr << "#####" << endl;
-                cerr << 1 << " " << 2 << endl;
+                player_rank[0] = 1;
+                player_rank[1] = 2;
             }
             else if (player_wins[1] > player_wins[0]){
                 //Player 1 wins!
-                cerr << "#####" << endl;
-                cerr << 2 << " " << 1 << endl;
+                player_rank[0] = 2;
+                player_rank[1] = 1;
             }
             else{
                 //DRAW GAME
-                cerr << "#####" << endl;
-                cerr << 1 << " " << 1 << endl;
+                player_rank[0] = 1;
+                player_rank[1] = 1;
             }
             return false;
         }
@@ -100,31 +102,38 @@ bool MyReferee::turn(){
     if (player_wins[0] == -1 && player_wins[1] == -1){
         //SAD, both players crashed
         //DRAW
-        cerr << "#####" << endl;
-        cerr << -1 << " " << -1 << endl;
+        player_rank[0] = -1;
+        player_rank[1] = -1;
         return false;
     }
     else if (player_wins[0] == -1){
         //Player 1 wins
-        cerr << "#####" << endl;
-        cerr << -1 << " " << 1 << endl;
+        player_rank[0] = -1;
+        player_rank[1] = 1;
         return false;
     }
     else if (player_wins[1] == -1){
         //Player 0 wins
-        cerr << "#####" << endl;
-        cerr << 1 << " " << -1 << endl;
+        player_rank[0] = 1;
+        player_rank[1] = -1;
         return false;
     }
     return true;
 }
 
-void MyReferee::run(){
+void MyReferee::print_result(){
+    cerr << "#####" << endl;
+    cerr << player_rank[0] << " " << player_rank[1] << endl;
+}
+
+int* MyReferee::run(){
     //Write initial move to agent
     do{
         cerr << "=====" << endl << turn_count << endl;
     } while(turn());
     board->display();
+    print_result();
+    return player_rank;
 }
 
 MyReferee::~MyReferee(){

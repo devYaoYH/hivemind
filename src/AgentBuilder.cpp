@@ -3,12 +3,17 @@ using namespace std;
 
 int AgentBuilder::num_agents = 0;
 
-AgentBuilder::AgentBuilder(): game_config(nullptr), agent_cmdlines(nullptr){
+AgentBuilder::AgentBuilder(): t_init(1000), t_round(50), game_config(nullptr), agent_cmdlines(nullptr){
 
 }
 
-AgentBuilder::AgentBuilder(map<string, string>* game_config, vector<string>* agent_cmdline): game_config(game_config), agent_cmdlines(agent_cmdline){
+AgentBuilder::AgentBuilder(map<string, string>* game_config, vector<string>* agent_cmdline): t_init(1000), t_round(50), game_config(game_config), agent_cmdlines(agent_cmdline){
 
+}
+
+void AgentBuilder::config(int t_init, int t_round){
+    this->t_init = t_init;
+    this->t_round = t_round;
 }
 
 bool AgentBuilder::genAgents(vector<AgentInterface*>& agents){
@@ -16,7 +21,7 @@ bool AgentBuilder::genAgents(vector<AgentInterface*>& agents){
     for (string cmdline: *agent_cmdlines){
         if (!getAgent(cmdline, agents)) return false;
         else{
-            cout << "Initialized Child: " << cmdline << endl;
+            if (debug_mode) cout << "Initialized Child: " << cmdline << endl;
         }
     }
     return true;
@@ -69,7 +74,7 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
 
         //Ensure we do all necessary setup steps before handling any SIGCHLDs
         //Do not close pipes as other end needs to be open for children to access
-        new_agent = new AgentInterface();
+        new_agent = new AgentInterface(t_init, t_round);
         new_agent->attach_pipes(fd_child_out[0], fd_child_in[1]);
         new_agent->sig_callback(0, true);
         new_agent->setPid(pid);
