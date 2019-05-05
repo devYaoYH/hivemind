@@ -78,6 +78,8 @@ Currently, Referee code is in-built into `./gameManager` executable during the c
 
 > TODO: Future work will be to separate the Referee object entirely as a separate process from our manager.
 
+We **MUST** define an `#define NUM_AGENTS` within our `MyReferee.h` file to notify the gameManager how many agents we expect within our configurations file (so we can raise an error if we have insufficient agents to play the game with).
+
 Abstract Referee class to implement:
 
 ```cpp
