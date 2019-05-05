@@ -1,11 +1,16 @@
 // Hivemind.cpp : Defines the entry point for the console application.
 #include "includes.h"
+#include "Parser.h"
 #include "AgentBuilder.h"
 #include "AgentInterface.h"
 #include "GameInterface.h"
 #include "Referee.h"
 #include "MyReferee.h"
 
+const string A_TYPE = "type";
+const string A_CMD = "cmd";
+
+const string config_fname = "config.json";
 char* arg[MAX_ARGS];
 
 vector<AgentInterface*> agents;
@@ -19,14 +24,59 @@ void remove_child(pid_t pid, int child_status, bool terminated);
 
 int main(int argc, char* argv[])
 {
+    //Parse config file
+    Parser* p_config = new Parser();
+    
+    //Parse our agents
+    map<string, string> agents_config;
+    vector<string> agent_names;
+    vector<string> agent_cmdlines;
+    p_config->getAttrs(agents_config, agent_names, "agents", config_fname);
+    for (string s: agent_names){
+        cout << s << endl;
+        map<string, string> cur_agent_config;
+        vector<string> tmp_agent_objs;
+        string cmdline = "";
+        p_config->getAttrs(cur_agent_config, tmp_agent_objs, s, config_fname);
+        for (pair<string, string> kv: cur_agent_config){
+            cout << "    " << kv.first << ": " << kv.second << endl;
+            if (kv.first.compare(A_TYPE) == 0){
+                cmdline = kv.second + " " + cmdline;
+            }
+            else if (kv.first.compare(A_CMD) == 0){
+                cmdline += kv.second;
+            }
+        }
+        cmdline += "\n";
+        agent_cmdlines.push_back(cmdline);
+    }
+
+    //Parse gameManager configurations
+    map<string, string> game_config;
+    vector<string> game_config_objs;
+    p_config->getAttrs(game_config, game_config_objs, "config", config_fname);
+    cout << "GameManager Configurations Loaded: " << endl;
+    for (pair<string, string> kv: game_config){
+        cout << "    " << kv.first << ": " << kv.second << endl;
+    }
+
+    //Exit on parsing errors
+    if (agent_names.size() < NUM_AGENTS){
+        cout << "Error, number of agents in configuration file: " << agent_names.size() << " is less than expected: " << NUM_AGENTS << endl;
+        return 1;
+    }
+    
     //Install signal handler for child processes
     Signal(SIGCHLD, sigchld_handler);
     
     //Initiate a Builder class for us to generate Agent objects from config file
-    AgentBuilder builder = AgentBuilder();
-
-    builder.getAgent("/usr/bin/python3 mcts_ucb.py 48\n", agents);
-    builder.getAgent("/usr/bin/python3 mcts_ucb.py 1\n", agents);
+    AgentBuilder builder = AgentBuilder(&game_config, &agent_cmdlines);
+    
+    //Generate multiple agents and place them into a vector<AgentInterface*>
+    if (!builder.genAgents(agents)){
+        cout << "Error, unable to initialize Agents!" << endl;
+        return 2;
+    }
     
     //Redirect stderr to log file
     string log_file = "game.log";
@@ -59,6 +109,7 @@ int main(int argc, char* argv[])
     //Clean up heap resources
     for (AgentInterface* agent: agents) delete agent;
     delete referee;
+    delete p_config;
 
     return 0;
 }

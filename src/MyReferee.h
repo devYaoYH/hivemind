@@ -3,6 +3,9 @@
 #include "LargeGrid.h"
 using namespace std;
 
+/* Define how many agents our Referee expects */
+#define NUM_AGENTS 2
+
 class MyReferee: public Referee{
     public:
         MyReferee(shared_ptr<GameInterface> game);
@@ -11,7 +14,7 @@ class MyReferee: public Referee{
         virtual void run();
     private:
         int turn_count;
-        int player_wins[2];
+        int player_wins[NUM_AGENTS];
         pair<int, int> last_move;
         LargeGrid* board;
         bool turn();

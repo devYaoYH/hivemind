@@ -1,19 +1,21 @@
 {
     "agents":
     {
-        "1":
+        "FastBot":
         {
-            "name": "naiveBot",
-            "cmd": "cpp_bot"
+            "type": "python3",
+            "cmd": "simple_uttt.py 10"
         },
-        "2":
+        "GoodBot":
         {
-            "name": "mctsBot",
-            "cmd": "python mcts.py"
+            "type": "python3",
+            "cmd": "mcts_ucb.py 48"
         }
     },
     "config":
     {
-        "time": 10
+        "init": "1000",
+        "round": "50",
+        "games": "5"
     }
 }

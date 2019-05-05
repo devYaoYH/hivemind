@@ -14,9 +14,9 @@ void Parser::getAttrs(map<string, string>& kvmap, vector<string>& expanded_objs,
 
 ConfigParser* Parser::getParser(){
     if (parser == nullptr){
-        return new JsonParser();
+        parser = new JsonParser();
     }
-    else return parser;
+    return parser;
 }
 
 Parser::~Parser(){

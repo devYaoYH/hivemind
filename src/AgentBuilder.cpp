@@ -3,8 +3,23 @@ using namespace std;
 
 int AgentBuilder::num_agents = 0;
 
-AgentBuilder::AgentBuilder(){
+AgentBuilder::AgentBuilder(): game_config(nullptr), agent_cmdlines(nullptr){
 
+}
+
+AgentBuilder::AgentBuilder(map<string, string>* game_config, vector<string>* agent_cmdline): game_config(game_config), agent_cmdlines(agent_cmdline){
+
+}
+
+bool AgentBuilder::genAgents(vector<AgentInterface*>& agents){
+    if (agent_cmdlines == nullptr) return false;
+    for (string cmdline: *agent_cmdlines){
+        if (!getAgent(cmdline, agents)) return false;
+        else{
+            cout << "Initialized Child: " << cmdline << endl;
+        }
+    }
+    return true;
 }
 
 bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
@@ -43,7 +58,7 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
         
         write(STDOUT_FILENO, &magic, 1);
 
-        if (execve(arg[0], arg, NULL) < 0){
+        if (execvp(arg[0], arg) < 0){
             //Error has occurred
             exit(1);
         }

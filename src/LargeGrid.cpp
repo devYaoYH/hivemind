@@ -37,14 +37,21 @@ void LargeGrid::display(){
 
 int LargeGrid::winner(){
     bool has_moves = false;
+    cerr << "-----" << endl;
     for (int r=0;r<3;++r){
+        cerr << '|';
         for (int c=0;c<3;++c){
-            if (grid[r][c]->winner() == play_EMPTY){
+            int cell_winner = grid[r][c]->winner();
+            if (cell_winner == 0) cerr << 'o';
+            else if (cell_winner == 1) cerr << 'x';
+            else cerr << ' ';
+            if (cell_winner == play_EMPTY){
                 has_moves = true;
-                break;
             }
         }
+        cerr << '|' << endl;
     }
+    cerr << "-----" << endl;
     if (!has_moves) return play_DRAW;
     for (int i=0;i<8;++i){
         //Check each line

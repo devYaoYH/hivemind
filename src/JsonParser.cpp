@@ -10,7 +10,7 @@ JsonParser::JsonParser() {
 }
 
 void JsonParser::getAttrs(map<string, string>& kvmap, vector<string>& expanded_objs, const string keySeq, const string fname) {
-	if (fname.compare(cur_config_fname)) {
+	if (fname.compare(cur_config_fname) == 0) {
 		//Walk keySeq and retrieve from cache
 		kvmap.clear();
 		expanded_objs.clear();
@@ -35,11 +35,23 @@ void JsonParser::getAttrs(map<string, string>& kvmap, vector<string>& expanded_o
 						expanded_objs.push_back(keySeq + " " + item.key());
 					}
 					else {
-						kvmap.insert(pair<string, string>(item.key(), item.value()));
+                        kvmap.insert(pair<string, string>(item.key(), item.value()));
 					}
 				}
 			}
 		}
+        else{
+            //No keys given, get top level keys
+            auto top_layer = *config_data;
+            for (auto& item: top_layer.items()){
+                if (item.value().is_structured()){
+                    expanded_objs.push_back(item.key());
+                }
+                else{
+                    kvmap.insert(pair<string, string>(item.key(), item.value()));
+                }
+            }
+        }
 	}
 	else {
 		//File I/O Load to config_data
@@ -56,7 +68,7 @@ void JsonParser::getAttrs(map<string, string>& kvmap, vector<string>& expanded_o
 bool JsonParser::load_file(string fname) {
 	ifstream fin(fname);
 	if (!fin.is_open()) {
-		cout << "File: " << fname << " cannot be Opened!" << endl;
+		cerr << "JsonParser ERROR-> File: " << fname << " cannot be Opened!" << endl;
 		return false;
 	}
 	try {
@@ -68,6 +80,7 @@ bool JsonParser::load_file(string fname) {
 		return false;
 	}
 	fin.close();
+    cout << "Successfully parsed json file: " << fname << endl;
 	return true;
 }
 

@@ -3,8 +3,7 @@ using namespace std;
 
 MyReferee::MyReferee(shared_ptr<GameInterface> game): Referee(), turn_count(0){
     hive = game;
-    player_wins[0] = 0;
-    player_wins[1] = 0;
+    for (int i=0;i<NUM_AGENTS;++i) player_wins[i] = 0;
     last_move = pair<int, int>(-1, -1);
     board = new LargeGrid();
 }
@@ -62,6 +61,7 @@ bool MyReferee::turn(){
             //Agent reports error (crashes)
             player_wins[i] = -1;
         }
+        board->display();
         int play_result = board->winner();
         if (play_result == i){
             //We have a winner!!
@@ -78,8 +78,22 @@ bool MyReferee::turn(){
         }
         else if (play_result == play_DRAW){
             //Draw game
-            cerr << "#####" << endl;
-            cerr << 1 << " " << 1 << endl;
+            //Check how many small grids each player won
+            if (player_wins[0] > player_wins[1]){
+                //Player 0 wins!
+                cerr << "#####" << endl;
+                cerr << 1 << " " << 2 << endl;
+            }
+            else if (player_wins[1] > player_wins[0]){
+                //Player 1 wins!
+                cerr << "#####" << endl;
+                cerr << 2 << " " << 1 << endl;
+            }
+            else{
+                //DRAW GAME
+                cerr << "#####" << endl;
+                cerr << 1 << " " << 1 << endl;
+            }
             return false;
         }
     }
@@ -109,7 +123,6 @@ void MyReferee::run(){
     //Write initial move to agent
     do{
         cerr << "=====" << endl << turn_count << endl;
-        board->display();
     } while(turn());
     board->display();
 }

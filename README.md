@@ -31,6 +31,48 @@ Output `gameManager` binary executable that reads from `config.json` and spawns 
 ## Configurations
 Place configurations under `config.json` for binary to parse.
 
+We must have at least an "agents" key with agent process specifications. See example configuration file below:
+```
+{
+    "agents":
+    {
+        "FastBot":
+        {
+            "type": "python3",
+            "cmd": "simple_uttt.py 10"
+        },
+        "GoodBot":
+        {
+            "type": "python3",
+            "cmd": "mcts_ucb.py 48"
+        }
+    },
+    "config":
+    {
+        "init": "1000",
+        "round": "50",
+        "games": "5"
+    }
+}
+```
+Each "agent" requires a unique name that identifies it (key within "agents") and have at least the two "type" and "cmd" fields.
+
+- "type": Specifies what language it is written as, if it is a binary executable, an empty string suffices.
+- "cmd": Specifies what to run as the command line
+
+For instance:
+```
+    "JavaBot":
+    {
+        "type": "java",
+        "cmd": "SimpleIO"
+    },
+    "CppBot":
+        "type": "",
+        "cmd": "./timed_child"
+    }
+```
+
 ## Referee Specifications
 Currently, Referee code is in-built into `./gameManager` executable during the compilation step.
 
