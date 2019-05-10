@@ -21,13 +21,24 @@ bool AgentInterface::isAuto(){
 	return is_auto;
 }
 
-void AgentInterface::sig_callback(int status, bool state){
-    is_running = state;
+void AgentInterface::sig_callback(int status){
     child_status = status;
+}
+
+void AgentInterface::set_running(bool is_run){
+    is_running = is_run;
 }
 
 bool AgentInterface::running(){
     return is_running;
+}
+
+void AgentInterface::set_stopped(bool is_stop){
+    is_stopped = is_stop;
+}
+
+bool AgentInterface::stopped(){
+    return is_stopped;
 }
 
 int AgentInterface::getChldStat(){

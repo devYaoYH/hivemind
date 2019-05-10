@@ -168,6 +168,9 @@ int main(int argc, char* argv[])
             cout << "Error, unable to initialize Agents!" << endl;
             return 2;
         }
+        else{
+            cout << "Agents spawned successfully..." << endl;
+        }
         
         //Create our Referee Object
         Referee* referee = new MyReferee(game_handle);
@@ -212,6 +215,9 @@ int main(int argc, char* argv[])
             if (!builder.genAgents(agents)){
                 cout << "Error, unable to initialize Agents!" << endl;
                 return 2;
+            }
+            else{
+                cout << "Agents spawned successfully..." << endl;
             }
             reverse(agents.begin(), agents.end());
             
@@ -263,12 +269,20 @@ int main(int argc, char* argv[])
 }
 
 /* Process Methods */
-void remove_child(pid_t pid, int child_status, bool running){
-    char tmp[] = "child terminated\n";
-    if (debug_mode) write(STDOUT_FILENO, tmp, 17);
+void set_agent_status(pid_t pid, int child_status, bool running, bool stopped){
+    char tmp[] = "child reporting\n";
+    char run_stat = '0' + running;
+    char stop_stat = '0' + stopped;
+    char debug_str[] = {run_stat, '|', stop_stat};
+    if (debug_mode) write(STDOUT_FILENO, tmp, 16);
+    if (debug_mode) write(STDOUT_FILENO, debug_str, 1);
+    if (debug_mode) write(STDOUT_FILENO, debug_str+1, 1);
+    if (debug_mode) write(STDOUT_FILENO, debug_str+2, 1);
     for (AgentInterface* agent: agents){
         if (pid == agent->getPid()){
-            agent->sig_callback(child_status, running);
+            agent->sig_callback(child_status);
+            agent->set_running(running);
+            agent->set_stopped(stopped);
             break;
         }
     }
@@ -282,11 +296,23 @@ void sigchld_handler(int sig){
     int child_status;
 
     sigfillset(&mask_all);
-    while((pid = waitpid(-1, &child_status, WNOHANG)) > 0){
+    while((pid = waitpid(-1, &child_status, WNOHANG | WUNTRACED | WCONTINUED)) > 0){
         //Block all signals while we handle this child
         sigprocmask(SIG_BLOCK, &mask_all, &prev_all);
         //Do stuff to process child signal
-        remove_child(pid, child_status, false);
+        if (WIFEXITED(child_status) || WIFSIGNALED(child_status)){
+            set_agent_status(pid, child_status, false, false);
+        }
+        else if (WIFSTOPPED(child_status)){
+            set_agent_status(pid, child_status, true, true);
+        }
+        else if (WIFCONTINUED(child_status)){
+            set_agent_status(pid, child_status, true, false);
+        }
+        else{
+            char err[] = "child uncaught\n";
+            if (debug_mode) write(STDOUT_FILENO, err, 15);
+        }
         //Ready to receive signals
         sigprocmask(SIG_SETMASK, &prev_all, NULL);
     }

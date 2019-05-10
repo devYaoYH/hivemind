@@ -20,9 +20,12 @@ class AgentInterface {
 		bool isAuto();			        				//Getter for is_auto?
         
         //Process control methods
+        void set_running(bool is_run);                  //Sets running state of process
         bool running();                                 //Is child process still running?
+        void set_stopped(bool is_stop);                 //Sets stopped state of process
+        bool stopped();                                 //Is child process stopped?
         int getChldStat();                              //Get child process running status
-        void sig_callback(int status, bool state);      //Reports child process from main
+        void sig_callback(int status);                  //Reports child process from main
         void setPid(pid_t pid);                         //Sets child process pid
         pid_t getPid();                                 //Returns child pid
 

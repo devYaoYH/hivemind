@@ -24,6 +24,28 @@ bool AgentBuilder::genAgents(vector<AgentInterface*>& agents){
             if (debug_mode) cout << "Initialized Child: " << cmdline << endl;
         }
     }
+    
+    //Busy loop to ensure all agent processes starts and are stopped by SIGSTOP
+    bool agents_ready = false;
+    bool agents_error = false;
+    while (!agents_ready && !agents_error){
+        agents_ready = false;
+        agents_error = false;
+        for (AgentInterface* agent: agents){
+            if (!agent->running()){
+                agents_error = true;
+                //cout << "Agent: " << agent->getPid() << " NOT RUNNING|" << agent->getCmd();
+            }
+            if (!agent->stopped()){
+                agents_ready = false;
+                //cout << "Agent: " << agent->getPid() << " NOT STOPPED|" << agent->getCmd();
+            }
+        }
+    }
+    if (agents_error){
+        cout << "Initialization Error: Agents compilation error!" << endl;
+        return false;
+    }
     return true;
 }
 
@@ -76,7 +98,9 @@ bool AgentBuilder::getAgent(string cmdline, vector<AgentInterface*>& agents){
         //Do not close pipes as other end needs to be open for children to access
         new_agent = new AgentInterface(t_init, t_round);
         new_agent->attach_pipes(fd_child_out[0], fd_child_in[1]);
-        new_agent->sig_callback(0, true);
+        new_agent->sig_callback(0);
+        new_agent->set_running(true);
+        new_agent->set_stopped(false);
         new_agent->setPid(pid);
         new_agent->setCmd(cmdline);
         agents.push_back(new_agent);    //Modifies common datastruc (that sigchld_handler relies on)
